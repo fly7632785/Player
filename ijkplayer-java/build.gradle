@@ -1,0 +1,26 @@
+apply plugin: 'com.android.library'
+
+android {
+    def globalConfig = rootProject.extensions.getByName('ext')
+    compileSdkVersion globalConfig['androidCompileSdkVersion']
+    buildToolsVersion globalConfig['androidBuildToolsVersion']
+
+    defaultConfig {
+        minSdkVersion globalConfig['androidMinSdkVersion']
+        targetSdkVersion globalConfig['androidTargetSdkVersion']
+    }
+    lintOptions {
+        abortOnError false
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+

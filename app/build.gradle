@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+
+android {
+    def globalConfig = rootProject.extensions.getByName('ext')
+
+    compileSdkVersion globalConfig['androidCompileSdkVersion']
+    buildToolsVersion globalConfig['androidBuildToolsVersion']
+
+    defaultConfig {
+        minSdkVersion globalConfig['androidMinSdkVersion']
+        targetSdkVersion globalConfig['androidTargetSdkVersion']
+        applicationId globalConfig['androidApplicationID']
+        versionCode globalConfig['androidVersionCode']
+        versionName globalConfig['androidVersionName']
+
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+
+        multiDexEnabled true  //开启multidex开关
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/beans.xml'
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+    implementation "com.github.fly7632785:TitleBar:$rootProject.titlebarVersion"
+    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:$rootProject.baseAdapterVersion"
+
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
+
+    implementation project(':videoview')
+    implementation project(':dropscreen')
+}

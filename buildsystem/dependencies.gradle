@@ -1,0 +1,32 @@
+allprojects {
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.google.com' }
+        maven { url 'https://jitpack.io' }
+        jcenter()
+    }
+}
+
+ext {
+    androidApplicationID = 'com.jafir.player'
+    androidVersionCode = 1
+    androidVersionName = '1.0.0'
+
+    // SDK and tools version
+    androidBuildToolsVersion = '26.0.3'
+    androidMinSdkVersion = 14
+    androidTargetSdkVersion = 26
+    androidCompileSdkVersion = 26
+
+    // App dependencies version
+    supportLibraryVersion = '27.1.1'
+    constraintVersion = '1.1.3'
+    ijkplayerVersion = '0.8.8'
+
+    butterKnifeVersion = '8.8.1'
+    titlebarVersion = '1.0.2'
+    baseAdapterVersion = "2.9.35"
+
+    rxAndroidVersion = '2.0.2'
+}
+

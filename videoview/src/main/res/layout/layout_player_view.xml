@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_video_box"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <com.pockettv.player.media.IjkVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <master.flame.danmaku.ui.widget.DanmakuView
+        android:id="@+id/sv_danmaku"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/layout_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateOnly="true"
+            />
+
+        <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            tools:text="正在加载中...请稍等"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/layout_touch_gestures"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <include layout="@layout/layout_top_bar" />
+
+    <include layout="@layout/layout_bottom_bar" />
+
+    <ImageView
+        android:id="@+id/iv_player_lock"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/shape_player_lock_bg"
+        android:padding="10dp"
+        android:src="@drawable/sel_player_lock"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <include layout="@layout/layout_skip_tip" />
+
+
+    <FrameLayout
+        android:id="@+id/fl_reload_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/iv_reload_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:src="@mipmap/ic_return_back" />
+
+        <TextView
+            android:id="@+id/tv_reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableTop="@mipmap/ic_reload"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="点击重试"
+            android:textColor="#d4237a"
+            android:textSize="16sp" />
+    </FrameLayout>
+
+    <include layout="@layout/layout_media_quality" />
+
+    <include layout="@layout/layout_send_danmaku" />
+
+    <LinearLayout
+        android:id="@+id/view_video_hint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前使用移动网络，是否继续播放？"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/view_video_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_btn_white"
+            android:padding="5dp"
+            android:text="继续播放"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_drop_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/drop_screen_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/drop_screen_status"
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            tools:text="荣耀盒子pro" />
+
+        <TextView
+            android:id="@+id/drop_screen_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/drop_screen_control"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:padding="5dp"
+            android:textColor="@android:color/white"
+            tools:text="正在投屏" />
+
+        <LinearLayout
+            android:id="@+id/drop_screen_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/drop_screen_add_volume"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_btn_top_round"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="+"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/drop_screen_reduce_volume"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/bg_btn_bottom_round"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="—"
+                android:textColor="@android:color/white" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/drop_screen_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/drop_screen_quit"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:background="@drawable/bg_btn_left_round"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="退出投屏"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/drop_screen_restart"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/bg_btn_rectangle"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="重新投屏"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/drop_screen_devices"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/bg_btn_right_round"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="换设备"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

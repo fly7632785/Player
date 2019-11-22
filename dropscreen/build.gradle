@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+
+android {
+    def globalConfig = rootProject.extensions.getByName('ext')
+
+    compileSdkVersion globalConfig['androidCompileSdkVersion']
+    buildToolsVersion globalConfig['androidBuildToolsVersion']
+
+    defaultConfig {
+        minSdkVersion globalConfig['androidMinSdkVersion']
+        targetSdkVersion globalConfig['androidTargetSdkVersion']
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    // Cling library
+    api 'org.fourthline.cling:cling-core:2.1.1'
+    api 'org.fourthline.cling:cling-support:2.1.1'
+    // Jetty library
+    api 'org.eclipse.jetty:jetty-server:8.1.12.v20130726'
+    api 'org.eclipse.jetty:jetty-servlet:8.1.12.v20130726'
+    api 'org.eclipse.jetty:jetty-client:8.1.12.v20130726'
+}
