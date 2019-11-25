@@ -1,9 +1,14 @@
 package com.jafir.player;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * created by jafir on 2019/3/15
  */
+@Entity(tableName = "recording_video")
 public class RecordingModel {
+    @PrimaryKey(autoGenerate = true)
     private long rid;
     private String name;
     private String coverUrl;

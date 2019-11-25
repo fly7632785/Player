@@ -31,6 +31,30 @@
     <View style="@style/h_line" />
 
     <LinearLayout
+        android:id="@+id/screenshot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            android:src="@drawable/icon_airdrop" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="截图"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <View style="@style/h_line" />
+
+    <LinearLayout
         android:id="@+id/record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -84,5 +108,29 @@
             android:text="开始缓存"
             android:textSize="16sp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/to_record_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            android:src="@drawable/icon_airdrop" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="录制管理器"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <View style="@style/h_line" />
 
 </LinearLayout>

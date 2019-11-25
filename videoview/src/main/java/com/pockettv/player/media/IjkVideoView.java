@@ -1376,7 +1376,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      * 录制视频相关 =========================================================================
      */
     //截图
-    public boolean snapshotPicture(final File file ) {
+    public boolean snapshotPicture(final File file) {
         int width = mMediaPlayer.getVideoWidth();
         int height = mMediaPlayer.getVideoHeight();
         final Bitmap srcBitmap = Bitmap.createBitmap(width,
@@ -1404,7 +1404,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             e.printStackTrace();
         } finally {
             try {
-                out.close();
+                if (out != null) {
+                    out.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

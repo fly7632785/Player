@@ -6,4 +6,12 @@
 
     <color name="light_blue">#eafaff</color>
     <color name="divider">#eeeeee</color>
+
+    <color name="white">#ffffff</color>
+    <color name="color_red">#E54B08</color>
+    <color name="color_more">#919191</color>
+    <!--字体颜色-->
+    <color name="font_black">#666666</color>
+    <color name="font_black_dark">#333333</color>
+    <color name="font_grey">#c8c8c8</color>
 </resources>

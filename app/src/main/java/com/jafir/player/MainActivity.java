@@ -1,9 +1,11 @@
 package com.jafir.player;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -26,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jafir.player.dao.AppDatabase;
+import com.jafir.player.dao.RecordingVideoDao;
 import com.pockettv.dropscreen.Intents;
 import com.pockettv.dropscreen.control.ClingPlayControl;
 import com.pockettv.dropscreen.control.callback.ControlCallback;
@@ -39,6 +43,7 @@ import com.pockettv.dropscreen.service.manager.DeviceManager;
 import com.pockettv.player.MediaCodecType;
 import com.pockettv.player.Settings;
 import com.pockettv.player.media.IjkPlayerView;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,9 +55,12 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -63,8 +71,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     //是否第一次进入就全屏（可缩小）
     private static final String INTENT_KEY_FIRST_FULL = "intent_key_first_full";
-    private static final String MOCK_DROP_URL = "";
-    private static final String MOCK_PLAY_URL = "";
+
+
+    private String MOCK_PLAY_URL = "http://ha.wheel.duolebo.com/live.m3u8?p=61c4e404-81c0-4776-b922-87e71dcf6145&c=533414451&m3u8=true";
+    //需要m3u8地址
+    private String MOCK_DROP_URL = "http://ha.wheel.duolebo.com/live.m3u8?p=61c4e404-81c0-4776-b922-87e71dcf6145&c=533414451&m3u8=true";
     public static final String MOCK_TITLE = "播放标题";
 
     //投屏是否成功
@@ -149,6 +160,10 @@ public class MainActivity extends AppCompatActivity {
     IjkPlayerView mPlayerView;
     @BindView(R.id.record)
     View mRecord;
+    @BindView(R.id.screenshot)
+    View mScreenshot;
+    @BindView(R.id.to_record_list)
+    View mToRecordList;
     @BindView(R.id.layout_record)
     View mRecordLayout;
     @BindView(R.id.txt_record)
@@ -157,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView mRecordImg;
     @BindView(R.id.record_time)
     TextView mRecordTime;
+    RecordingVideoDao mRecordingVideoDao;
 
 
     @Override
@@ -169,17 +185,59 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
+        AppDatabase appDatabase = AppDatabase.create(getApplication());
+        mRecordingVideoDao = appDatabase.recordingVideoDao();
+        new RxPermissions(this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean bool) {
+                        if (!bool) {
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+        String now = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        Log.d(TAG, "now:" + now);
+//        MOCK_DROP_URL = String.format(MOCK_DROP_URL, now, now);
+//        MOCK_PLAY_URL = String.format(MOCK_DROP_URL, now, now);
     }
 
     private void initView() {
         initVideo();
+        registerReceivers();
         initSettingView();
+    }
+
+
+    /**
+     * 注册投屏状态和控制的全局广播监听器
+     */
+    private void registerReceivers() {
+        //Register play status broadcast
+        mTransportStateBroadcastReceiver = new TransportStateBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intents.ACTION_PLAYING);
+        filter.addAction(Intents.ACTION_PAUSED_PLAYBACK);
+        filter.addAction(Intents.ACTION_STOPPED);
+        filter.addAction(Intents.ACTION_TRANSITIONING);
+        filter.addAction(Intents.ACTION_VOLUME_CALLBACK);
+        registerReceiver(mTransportStateBroadcastReceiver, filter);
     }
 
     private void initVideo() {
         //设置软解
         new Settings(this).setUsingMediaCodec(MediaCodecType.SOFT);
-
         mPlayerView.init()
                 .enableOrientation()
                 .setTitle("播放标题")
@@ -208,6 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 .setOnErrorListener((iMediaPlayer, i, i1) -> {
                     if (!mPlayerView.isEnableDropScreen()) {
                         //todo  doOnError
+                        playUrl();
                     }
                     return true;
                 })
@@ -245,12 +304,12 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onPause() {
-                        pause();
+                        pauseDropScreen();
                     }
 
                     @Override
                     public void onStart() {
-                        play();
+                        playDropScreen();
                     }
 
                     @Override
@@ -270,6 +329,14 @@ public class MainActivity extends AppCompatActivity {
             mRecordLayout.setVisibility(View.VISIBLE);
         });
 
+        mScreenshot.setOnClickListener(v -> {
+            String shotPath = FileManager.snapshotFileDir + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".jpg";
+            mPlayerView.screenShot(new File(shotPath));
+            Toast.makeText(MainActivity.this, "截图保存：" + shotPath, Toast.LENGTH_SHORT).show();
+        });
+        mToRecordList.setOnClickListener(v -> {
+            startActivity(RecordVideoListActivity.createIntent(this));
+        });
         mRecordLayout.setOnClickListener(v -> {
             if (mPlayerView.isRecording()) {
                 stopRecord();
@@ -309,12 +376,16 @@ public class MainActivity extends AppCompatActivity {
         playUrl();
     }
 
-
     private void playUrl() {
-        if (mPlayerView != null && !mPlayerView.isEnableDropScreen()) {
-            mPlayerView.setVideoPath(Uri.parse(MOCK_PLAY_URL));
-            mPlayerView.start();
-        }
+        //todo 模拟请求数据
+        showVideoLoading();
+        new Handler().postDelayed(() -> {
+            if (mPlayerView != null && !mPlayerView.isEnableDropScreen()) {
+                mPlayerView.setVideoPath(Uri.parse(MOCK_PLAY_URL));
+                mPlayerView.start();
+            }
+            //playerView 会在加载成功调用 hideVideoLoading();
+        }, 1000);
     }
 
     public void showMediaPlayFail() {
@@ -404,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onActivityResult startDropScreen");
             mPlayerView.enableDropScreen(true);
             mHandler.sendEmptyMessage(TRANSITIONING_ACTION);
-            play();
+            playDropScreen();
         }
     }
 
@@ -453,11 +524,37 @@ public class MainActivity extends AppCompatActivity {
                     pair.second,
                     file.length()
             );
-            //todo  保存录制的信息到数据库
+            addRecordingVideo(model);
             Toast.makeText(MainActivity.this, "视频已保存：" + recordingFilePath, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(MainActivity.this, "录制失败", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    /**
+     * 增加录制视频model
+     */
+    public void addRecordingVideo(RecordingModel... list) {
+        Completable.create(emitter -> mRecordingVideoDao.insertOrUpdateRecordVideo(list))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "addRecordingVideo");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "addRecordingVideo " + e);
+                    }
+                });
     }
 
     private Pair<String, String> getAvatarAndDuration(File file) {
@@ -533,7 +630,7 @@ public class MainActivity extends AppCompatActivity {
     public void startDropScreen() {
         Log.d(TAG, "startDropScreen");
         mPlayerView.enableDropScreen(true);
-        play();
+        playDropScreen();
     }
 
     public void showVideoLoading() {
@@ -569,16 +666,16 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 暂停
      */
-    private void pause() {
+    private void pauseDropScreen() {
         mClingPlayControl.pause(new ControlCallback() {
             @Override
             public void success(IResponse response) {
-                Log.d(TAG, "dropscreen control pause success");
+                Log.d(TAG, "dropscreen control pauseDropScreen success");
             }
 
             @Override
             public void fail(IResponse response) {
-                Log.e(TAG, "dropscreen control pause fail");
+                Log.e(TAG, "dropscreen control pauseDropScreen fail");
             }
         });
     }
@@ -586,7 +683,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 播放视频
      */
-    private void play() {
+    private void playDropScreen() {
         @DLANPlayState.DLANPlayStates int currentState = mClingPlayControl.getCurrentState();
 
         /**
@@ -594,7 +691,7 @@ public class MainActivity extends AppCompatActivity {
          */
         if (currentState == DLANPlayState.STOP) {
 //        if (true) {
-            String url = MOCK_DROP_URL;
+            String url = String.format(MOCK_DROP_URL, new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
             if (TextUtils.isEmpty(url)) {
                 mHandler.removeMessages(ERROR_ACTION);
                 mHandler.sendEmptyMessageDelayed(ERROR_ACTION, 1000);
@@ -607,7 +704,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void success(IResponse response) {
-                    Log.d(TAG, "dropscreen control play success");
+                    Log.d(TAG, "dropscreen control playDropScreen success");
                     ClingManager.getInstance().registerAVTransport(MainActivity.this.getApplicationContext());
                     ClingManager.getInstance().registerRenderingControl(MainActivity.this.getApplicationContext());
                     mHandler.sendEmptyMessage(PLAY_ACTION);
@@ -615,7 +712,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void fail(IResponse response) {
-                    Log.e(TAG, "dropscreen control play fail");
+                    Log.e(TAG, "dropscreen control playDropScreen fail");
                     mHandler.removeMessages(ERROR_ACTION);
                     mHandler.sendEmptyMessageDelayed(ERROR_ACTION, 1000);
                 }
@@ -625,12 +722,12 @@ public class MainActivity extends AppCompatActivity {
             mClingPlayControl.play(new ControlCallback() {
                 @Override
                 public void success(IResponse response) {
-                    Log.d(TAG, "dropscreen control play success");
+                    Log.d(TAG, "dropscreen control playDropScreen success");
                 }
 
                 @Override
                 public void fail(IResponse response) {
-                    Log.e(TAG, "dropscreen control play fail");
+                    Log.e(TAG, "dropscreen control playDropScreen fail");
                     mHandler.removeMessages(ERROR_ACTION);
                     mHandler.sendEmptyMessageDelayed(ERROR_ACTION, 1000);
                 }
@@ -689,7 +786,7 @@ public class MainActivity extends AppCompatActivity {
                     //如果没有成功过 就停止了 也说明是播放不了 换源播放
                     if (!mIsDropScreenSuccess) {
                         //todo 切换url重试
-                        play();
+                        playDropScreen();
                     }
                     break;
                 case TRANSITIONING_ACTION:
@@ -703,7 +800,7 @@ public class MainActivity extends AppCompatActivity {
                     mPlayerView.setDropScrennPlayStatus(false);
                     mPlayerView.setDropScrennPlayRestartStatus(true);
                     //todo 切换url重试
-                    play();
+                    playDropScreen();
                     break;
             }
         }
