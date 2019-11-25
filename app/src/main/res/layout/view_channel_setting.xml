@@ -29,7 +29,6 @@
     </LinearLayout>
 
     <View style="@style/h_line" />
-
     <LinearLayout
         android:id="@+id/screenshot"
         android:layout_width="match_parent"
@@ -53,7 +52,6 @@
     </LinearLayout>
 
     <View style="@style/h_line" />
-
     <LinearLayout
         android:id="@+id/record"
         android:layout_width="match_parent"
@@ -75,13 +73,13 @@
             android:layout_marginRight="50dp"
             android:text="直播缓存"
             android:textSize="16sp" />
+
         <TextView
             android:id="@+id/record_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            tools:text="已录制 10:10"
-             />
+            tools:text="已录制 10:10" />
     </LinearLayout>
 
     <LinearLayout
@@ -109,6 +107,7 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <View style="@style/h_line" />
     <LinearLayout
         android:id="@+id/to_record_list"
         android:layout_width="match_parent"
@@ -130,7 +129,15 @@
             android:text="录制管理器"
             android:textSize="16sp" />
     </LinearLayout>
-
     <View style="@style/h_line" />
+    <Switch
+        android:padding="20dp"
+        android:id="@+id/mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" 软解   " />
+
+
+
 
 </LinearLayout>

@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -172,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView mRecordImg;
     @BindView(R.id.record_time)
     TextView mRecordTime;
+    @BindView(R.id.mode)
+    Switch mSwitch;
     RecordingVideoDao mRecordingVideoDao;
 
 
@@ -237,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initVideo() {
         //设置软解
-        new Settings(this).setUsingMediaCodec(MediaCodecType.SOFT);
         mPlayerView.init()
                 .enableOrientation()
                 .setTitle("播放标题")
@@ -341,10 +343,11 @@ public class MainActivity extends AppCompatActivity {
             if (mPlayerView.isRecording()) {
                 stopRecord();
             } else {
-                if (new Settings(this).getUsingMediaCodec() != MediaCodecType.SOFT) {
-                    Toast.makeText(MainActivity.this, "只有软件解码方式才能录制视频，请设置", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                todo 硬解也可以播放 但是有时候会莫名其妙出错 还没有还清楚为什么
+//                if (new Settings(this).getUsingMediaCodec() != MediaCodecType.SOFT) {
+//                    Toast.makeText(MainActivity.this, "只有软件解码方式才能录制视频，请设置", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 if (!mPlayerView.isPlaying()) {
                     Toast.makeText(MainActivity.this, "视频没有播放，无法录制", Toast.LENGTH_SHORT).show();
                     return;
@@ -358,6 +361,15 @@ public class MainActivity extends AppCompatActivity {
                             startRecord();
                         }).show();
             }
+        });
+        mSwitch.setChecked(new Settings(MainActivity.this).getUsingMediaCodec() != MediaCodecType.HARD);
+        mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                new Settings(MainActivity.this).setUsingMediaCodec(MediaCodecType.SOFT);
+            } else {
+                new Settings(MainActivity.this).setUsingMediaCodec(MediaCodecType.HARD);
+            }
+            mPlayerView.reload();
         });
     }
 

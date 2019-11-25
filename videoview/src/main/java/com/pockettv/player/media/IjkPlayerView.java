@@ -1929,7 +1929,6 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         }
     }
 
-
     /**
      * ============================ 自定义listner 和版权屏蔽 请求超时还原等 ============================
      */
