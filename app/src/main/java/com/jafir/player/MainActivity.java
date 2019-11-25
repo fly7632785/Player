@@ -73,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String INTENT_KEY_FIRST_FULL = "intent_key_first_full";
 
 
-    private String MOCK_PLAY_URL = "http://ha.wheel.duolebo.com/live.m3u8?p=61c4e404-81c0-4776-b922-87e71dcf6145&c=533414451&m3u8=true";
+    private String MOCK_PLAY_URL = "http://cctvalih5ca.v.myalicdn.com/live/cctv4_2/index.m3u8";
     //需要m3u8地址
-    private String MOCK_DROP_URL = "http://ha.wheel.duolebo.com/live.m3u8?p=61c4e404-81c0-4776-b922-87e71dcf6145&c=533414451&m3u8=true";
+    private String MOCK_DROP_URL = "http://cctvalih5ca.v.myalicdn.com/live/cctv4_2/index.m3u8";
     public static final String MOCK_TITLE = "播放标题";
 
     //投屏是否成功
