@@ -1174,9 +1174,28 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                             ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1L);
                         }
                         if (mUri.toString().startsWith("rtsp")) {
-                            ijkMediaPlayer.setOption(1, "infbuf", 1);
-                            ijkMediaPlayer.setOption(1, "rtsp_transport", "tcp");
-                            ijkMediaPlayer.setOption(1, "rtsp_flags", "prefer_tcp");
+//                            ijkMediaPlayer.setOption(1, "infbuf", 1);
+//                            ijkMediaPlayer.setOption(1, "rtsp_transport", "tcp");
+//                            ijkMediaPlayer.setOption(1, "rtsp_flags", "prefer_tcp");
+                            // 最大缓冲cache是3s， 有时候网络波动，会突然在短时间内收到好几秒的数据
+// 因此需要播放器丢包，才不会累积延时
+// 这个和第三个参数packet-buffering无关。
+                            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 3000);
+
+// 无限制收流
+                            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
+
+// 设置无缓冲，这是播放器的缓冲区，有数据就播放
+                            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
+
+// 可选，有时候tcp模式出画面更快，因为rtsp是先udp，不成功再切到tcp的
+                            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
+
+// 设置在解析的 url 之前 （这里设置超时为5秒）
+// 如果没有设置stimeout，在解析时（也就是avformat_open_input）把网线拔掉，av_read_frame会阻塞（时间单位是微妙）
+                            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "stimeout", "5000000");
+
+
                         }
                     }
                 }
