@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String INTENT_KEY_FIRST_FULL = "intent_key_first_full";
 
 
-    //    private String MOCK_PLAY_URL = "http://cctvalih5ca.v.myalicdn.com/live/cctv4_2/index.m3u8";
+//        private String MOCK_PLAY_URL = "http://cctvalih5ca.v.myalicdn.com/live/cctv4_2/index.m3u8";
 //    private String MOCK_PLAY_URL = "rtsp://61.156.103.73:554/PLTV/88888888/224/3221226043/10000100000000060000000000286778_0.smil";
     private String MOCK_PLAY_URL = "rtsp://117.159.12.233:554/pag://10.10.2.17:7302:35010000001310011390:0:MAIN:TCP";
     //需要m3u8地址
@@ -507,7 +507,7 @@ public class MainActivity extends AppCompatActivity {
                     mRecordTime.setText("已录制 " + TimeCompat.secToTime(i.intValue()));
                 });
         recordingFilePath = FileManager.videoFileDir +
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + ".mp4";
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + ".mov";
         File file = new File(recordingFilePath);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
