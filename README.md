@@ -12,13 +12,13 @@
 
 
 # 截图
-<img src="screenshot/shot1.png" width="40%"/>  <img src="screenshot/shot2.png" width="40%"/>
+<img src="screenshot/shot1.jpg" width="40%"/>  <img src="screenshot/shot2.png" width="40%"/>
 
 <img src="screenshot/shot3.png" width="80%"/>
 
-<img src="screenshot/shot4.png" width="40%"/>  <img src="screenshot/shot5.png" width="40%"/>
+<img src="screenshot/shot4.jpg" width="40%"/>  <img src="screenshot/shot5.png" width="40%"/>
 
-<img src="screenshot/shot6.png" width="80%"/>
+<img src="screenshot/shot6.jpg" width="80%"/>
 
 
 ### PS
