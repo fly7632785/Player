@@ -2233,9 +2233,13 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
      * 录屏相关===========================================================
      */
 
-    public void startRecord(String path) {
+    public boolean startRecord(String path) {
         mIsRecording = true;
-        mVideoView.startRecord(path);
+        boolean rel = mVideoView.startRecord(path);
+        if (!rel) {
+            mIsRecording = false;
+        }
+        return rel;
     }
 
     public boolean isRecording() {

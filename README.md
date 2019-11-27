@@ -4,9 +4,11 @@
 >
 > 2、截图 (不支持硬解)
 >
-> 3、录屏（支持m3u8格式的直播视频录制）
+> 3、录屏（支持m3u8、rtsp格式的直播视频录制）
 >
 > 4、视频直播相关功能（调音量、亮度、半屏全屏、锁定屏幕）
+>
+> 5、多种直播源格式的支持（m3u8\rtsp）
 
 
 # 截图
@@ -30,8 +32,22 @@
 
 
 2、报错，有很多时候录屏出来报错了，什么都没有，原因有很多：
-- 这里测试了下m3u8的直播源可以录制的
-- 有些源的mts pts不一致，有些源的地址本身是过期的地址，虽然能播，但是音视频不同步录制失败
-- 硬解也可以播放 但是有时候会莫名其妙出错 还没有还清楚为什么
+- 这里测试了下m3u8的直播源可以录制的，rtsp的源也是可以录制，但是有些比如摄像头采集的可能不行
+
+- 有些源的dts不是自增长的，有些源的地址本身是过期的地址，虽然能播，但是录制会失败
+```
+: Application provided invalid, non monotonically increasing dts to muxer in stream 0: 3031200 >= 0
+: Error muxing packet
+```
+
+- 有些源的音视频格式不是兼容mp4的，比如有些源的音频是pcm_alaw(视频采集)，就不能直接写到mp4的文件里面，可以改后缀为.mov
+```
+Could not find tag for codec pcm_alaw in stream #0, codec not currently supported in container MP4
+
+```
+- 硬解也可以播放 但是有时候会莫名其妙出错 还没有还清楚为什么（可能跟源有关系）
+
+
+
 
 

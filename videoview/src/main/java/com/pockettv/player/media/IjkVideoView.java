@@ -1433,10 +1433,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     }
 
     //开始录像
-    public void startRecord(String path) {
+    public boolean startRecord(String path) {
         if (mMediaPlayer != null) {
-            mMediaPlayer.startRecord(path);
+            return mMediaPlayer.startRecord(path) == 0;
         }
+        return false;
     }
 
     //结束录像
