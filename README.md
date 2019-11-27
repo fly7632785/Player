@@ -4,7 +4,7 @@
 >
 > 2、截图 (不支持硬解)
 >
-> 3、录屏（支持m3u8、rtsp格式的直播视频录制）
+> 3、录屏（支持hls(m3u8)、rtsp格式的直播视频录制）
 >
 > 4、视频直播相关功能（调音量、亮度、半屏全屏、锁定屏幕）
 >
@@ -12,9 +12,13 @@
 
 
 # 截图
-<img src="screenshot/shot1.png" width="40%"/><img src="screenshot/shot2.png" width="40%"/>
+<img src="screenshot/shot1.png" width="40%"/>  <img src="screenshot/shot2.png" width="40%"/>
+
 <img src="screenshot/shot3.png" width="80%"/>
-<img src="screenshot/shot4.png" width="40%"/><img src="screenshot/shot5.png" width="40%"/>
+
+<img src="screenshot/shot4.png" width="40%"/>  <img src="screenshot/shot5.png" width="40%"/>
+
+<img src="screenshot/shot6.png" width="80%"/>
 
 
 ### PS
