@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:focusable="true"
+        android:background="@drawable/bg_btn"
         android:orientation="horizontal"
         android:padding="10dp">
 
@@ -31,9 +33,11 @@
     <View style="@style/h_line" />
     <LinearLayout
         android:id="@+id/screenshot"
+        android:focusable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:background="@drawable/bg_btn"
         android:orientation="horizontal"
         android:padding="10dp">
 
@@ -54,10 +58,12 @@
     <View style="@style/h_line" />
     <LinearLayout
         android:id="@+id/record"
+        android:focusable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:background="@drawable/bg_btn"
         android:padding="10dp">
 
         <ImageView
@@ -85,9 +91,11 @@
     <LinearLayout
         android:id="@+id/layout_record"
         android:layout_width="match_parent"
+        android:focusable="true"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        android:background="@drawable/bg_btn"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -113,6 +121,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:focusable="true"
+        android:background="@drawable/bg_btn"
         android:orientation="horizontal"
         android:padding="10dp">
 
@@ -133,6 +143,7 @@
     <Switch
         android:padding="20dp"
         android:id="@+id/mode"
+        android:focusable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" 软解   " />
