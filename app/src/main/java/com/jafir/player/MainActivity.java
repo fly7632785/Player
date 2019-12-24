@@ -335,6 +335,10 @@ public class MainActivity extends AppCompatActivity {
 
         mScreenshot.setOnClickListener(v -> {
             if (new Settings(this).getUsingMediaCodec() == MediaCodecType.SOFT) {
+                if (!mPlayerView.isPlaying()) {
+                    Toast.makeText(MainActivity.this, "视频尚未成功播放", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String shotPath = FileManager.snapshotFileDir + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".jpg";
                 File file = new File(shotPath);
                 file.getParentFile().mkdirs();
