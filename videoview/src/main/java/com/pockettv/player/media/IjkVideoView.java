@@ -46,8 +46,6 @@ import com.pockettv.player.Settings;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
@@ -1396,6 +1394,10 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      */
     //截图
     public boolean snapshotPicture(final File file) {
+        if (mMediaPlayer == null) {
+            return false;
+        }
+
         int width = mMediaPlayer.getVideoWidth();
         int height = mMediaPlayer.getVideoHeight();
         final Bitmap srcBitmap = Bitmap.createBitmap(width,
